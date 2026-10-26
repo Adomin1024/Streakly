@@ -44,7 +44,7 @@ export default function Landing() {
   return (
     <div className="px">
       <header className="px-nav">
-        <span className="px-logo"><Sprite rows={TOMATO} scale={3} />Focus Log</span>
+        <span className="px-logo"><img src="/logo.svg" alt="" width={30} height={30} />Focus Log</span>
         <span className="flex-1" />
         {session ? (
           <Link to="/dashboard" className="btn btn-yel">Open dashboard</Link>

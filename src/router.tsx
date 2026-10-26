@@ -2,7 +2,8 @@ import { createRootRoute, createRoute, createRouter, Link, Navigate, Outlet } fr
 import { useAuth } from './lib/auth'
 import { configured } from './lib/supabase'
 import { TimerProvider } from './lib/timer'
-import { Sprite, TOMATO } from './lib/pixel'
+import { useAppTheme } from './lib/theme'
+import Avatar, { useProfile } from './components/Avatar'
 import Landing from './pages/Landing'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
@@ -28,20 +29,28 @@ function Root() {
   return <><Bg />{body}</>
 }
 
+/** Signed-in users skip the landing page and go straight to the dashboard. */
+function Home() {
+  const { session } = useAuth()
+  if (session) return <Navigate to="/dashboard" replace />
+  return <Landing />
+}
+
 /** Everything behind sign-in. TimerProvider sits here so the timer survives page changes. */
 function AppLayout() {
   const { session } = useAuth()
+  const { name } = useProfile()
+  useAppTheme()
   if (!session) return <Navigate to="/" />
 
   const nav = 'btn'
   const active = { className: 'btn btn-yel' }
-  const email = session.user.email ?? ''
   return (
     <TimerProvider>
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:m-2 focus:bg-white focus:p-2 focus:text-black">Skip to content</a>
       <header className="top">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-3 px-6 py-3">
-          <Link to="/" className="flex items-center gap-2 font-display text-lg font-extrabold text-white no-underline"><Sprite rows={TOMATO} scale={3} />Focus Log</Link>
+          <Link to="/dashboard" className="brand flex items-center font-display font-bold text-white no-underline"><img src="/logo.svg" alt="" />Focus Log</Link>
           <nav aria-label="Main" className="flex flex-wrap gap-1">
             <Link to="/dashboard" className={nav} activeProps={active}>Dashboard</Link>
             <Link to="/timer" className={nav} activeProps={active}>Timer</Link>
@@ -49,7 +58,7 @@ function AppLayout() {
             <Link to="/weekly" className={nav} activeProps={active}>Week</Link>
             <Link to="/profile" className={nav} activeProps={active}>Profile</Link>
           </nav>
-          <Link to="/profile" className="chip ml-auto" aria-label="Open profile"><span className="avatar">{email.charAt(0).toUpperCase()}</span><span className="hidden sm:inline">{email}</span></Link>
+          <Link to="/profile" className="chip ml-auto" aria-label="Open profile"><Avatar /><span className="hidden sm:inline">{name}</span></Link>
         </div>
       </header>
       <main id="main" className="mx-auto max-w-7xl px-6 py-10"><Outlet /></main>
@@ -70,7 +79,7 @@ function NotFound() {
 const root = createRootRoute({ component: Root, notFoundComponent: NotFound })
 const app = createRoute({ getParentRoute: () => root, id: 'app', component: AppLayout })
 const routeTree = root.addChildren([
-  createRoute({ getParentRoute: () => root, path: '/', component: Landing }),
+  createRoute({ getParentRoute: () => root, path: '/', component: Home }),
   createRoute({ getParentRoute: () => root, path: '/signin', component: () => <Login key="in" mode="in" /> }),
   createRoute({ getParentRoute: () => root, path: '/signup', component: () => <Login key="up" mode="up" /> }),
   app.addChildren([

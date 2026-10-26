@@ -4,6 +4,7 @@ import TimerPanel from '../components/TimerPanel'
 import HabitsPanel from '../components/HabitsPanel'
 import WeeklyPanel from '../components/WeeklyPanel'
 import LogPanel from '../components/LogPanel'
+import Overview from '../components/Overview'
 
 type Id = 'timer' | 'habits' | 'weekly' | 'log'
 type Item = { id: Id; full: boolean; hide: boolean }
@@ -12,7 +13,7 @@ type Action = 'up' | 'down' | 'size' | 'hide'
 const DEFAULT: Item[] = [
   { id: 'timer', full: false, hide: false },
   { id: 'habits', full: false, hide: false },
-  { id: 'weekly', full: true, hide: false },
+  { id: 'weekly', full: false, hide: false },
   { id: 'log', full: false, hide: false },
 ]
 const TITLE: Record<Id, string> = { timer: 'Timer', habits: 'Habits', weekly: 'Last 7 days', log: 'Today’s sessions' }
@@ -28,7 +29,7 @@ function read(key: string): Item[] {
 
 export default function Dashboard() {
   const { session } = useAuth()
-  const key = `focuslog.layout.${session?.user.id}`
+  const key = `focuslog.layout.v2.${session?.user.id}`
   const [layout, setLayout] = useState<Item[]>(() => read(key))
   const [editing, setEditing] = useState(false)
   const [dragId, setDragId] = useState<Id | null>(null)
@@ -69,8 +70,8 @@ export default function Dashboard() {
   const hidden = layout.filter((p) => p.hide)
   return (
     <>
-      <div className="mb-4 flex flex-wrap items-center gap-2">
-        <h1 className="mr-auto text-3xl">Dashboard</h1>
+      <div className="mb-6 flex flex-wrap items-center gap-2">
+        <h1 className="mr-auto">Dashboard</h1>
         <button className={`btn ${editing ? 'btn-yel' : ''}`} aria-pressed={editing} onClick={() => setEditing(!editing)}>
           {editing ? 'Done arranging' : 'Arrange panels'}
         </button>
@@ -79,14 +80,16 @@ export default function Dashboard() {
       {editing && hidden.length > 0 && (
         <p className="mb-3">{hidden.map((p) => <button key={p.id} className="btn btn-sm" onClick={() => show(p.id)}>Show {TITLE[p.id]}</button>)}</p>
       )}
-      <div className={`grid gap-4 md:grid-cols-2 ${editing ? 'edit' : ''}`}>
-        {layout.filter((p) => !p.hide).map((p) => {
+      <Overview />
+      <div className={`grid gap-6 md:grid-cols-2 ${editing ? 'edit' : ''}`}>
+        {layout.filter((p) => !p.hide).map((p, i) => {
           const Body = BODY[p.id]
           return (
             <section
               key={p.id}
               aria-label={TITLE[p.id]}
               className={`panel ${p.full ? 'md:col-span-2' : ''} ${over === p.id ? 'over' : ''}`}
+              style={{ animationDelay: `${i * 70}ms` }}
               draggable={editing}
               onDragStart={(e) => { setDragId(p.id); e.dataTransfer.setData('text/plain', p.id) }}
               onDragOver={(e) => { if (editing) { e.preventDefault(); setOver(p.id) } }}
