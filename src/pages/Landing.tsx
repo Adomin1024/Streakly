@@ -44,7 +44,7 @@ export default function Landing() {
   return (
     <div className="px">
       <header className="px-nav">
-        <span className="px-logo"><img src="/logo.svg" alt="" width={30} height={30} />Focus Log</span>
+        <span className="px-logo"><img src="/logo.svg" alt="" width={30} height={30} />Streakly</span>
         <span className="flex-1" />
         {session ? (
           <Link to="/dashboard" className="btn btn-yel">Open dashboard</Link>
@@ -69,7 +69,7 @@ export default function Landing() {
         </section>
 
         <section className="px-sec" id="features">
-          <h2 className="px-h2">Everything in Focus Log</h2>
+          <h2 className="px-h2">Everything in Streakly</h2>
           <div className="px-cards">
             {FEATURES.map((f) => (
               <div className="px-card" key={f.tag}>
@@ -138,7 +138,7 @@ export default function Landing() {
         </section>
       </main>
 
-      <footer className="px-foot">© {new Date().getFullYear()} Focus Log</footer>
+      <footer className="px-foot">© {new Date().getFullYear()} Streakly</footer>
     </div>
   )
 }

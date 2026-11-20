@@ -96,7 +96,7 @@
   .habit:hover { transform: translateX(5px); background: #ffffff10; }
   .habit input[type=checkbox] { appearance: none; -webkit-appearance: none; flex: none; width: 26px; height: 26px; margin: 0; cursor: pointer; border-radius: 9px; background: #05061488; border: 2px solid #ffffff44; transition: background .2s, border-color .2s, box-shadow .2s; }
   .habit input[type=checkbox]:hover { border-color: var(--color-teal); }
-  .habit input[type=checkbox]:checked { background: linear-gradient(135deg, #3de8d0, #7c5cff) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/68% no-repeat; border-color: transparent; box-shadow: 0 0 18px #3de8d088; animation: pop .35s cubic-bezier(.2,.8,.2,1); }
+  .habit input[type=checkbox]:checked { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/68% no-repeat, linear-gradient(135deg, #3de8d0, #7c5cff); border-color: transparent; box-shadow: 0 0 18px #3de8d088; animation: pop .35s cubic-bezier(.2,.8,.2,1); }
   .logrow { display: flex; justify-content: space-between; padding: 10px 8px; margin: 0 -8px; border-radius: 12px; border-bottom: 1px solid #ffffff12; animation: rise .4s both; }
   .logrow:hover, tbody tr:hover { background: #ffffff0f; }
   .bar { height: 12px; border-radius: 99px; background: linear-gradient(90deg, #3de8d0, #7c5cff); box-shadow: 0 0 14px #3de8d066; transform-origin: left; animation: grow .8s cubic-bezier(.2,.8,.2,1); }

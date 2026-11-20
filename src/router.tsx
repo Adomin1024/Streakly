@@ -50,7 +50,7 @@ function AppLayout() {
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:m-2 focus:bg-white focus:p-2 focus:text-black">Skip to content</a>
       <header className="top">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-3 px-6 py-3">
-          <Link to="/dashboard" className="brand flex items-center font-display font-bold text-white no-underline"><img src="/logo.svg" alt="" />Focus Log</Link>
+          <Link to="/dashboard" className="brand flex items-center font-display font-bold text-white no-underline"><img src="/logo.svg" alt="" />Streakly</Link>
           <nav aria-label="Main" className="flex flex-wrap gap-1">
             <Link to="/dashboard" className={nav} activeProps={active}>Dashboard</Link>
             <Link to="/timer" className={nav} activeProps={active}>Timer</Link>

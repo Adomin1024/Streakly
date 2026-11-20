@@ -71,9 +71,9 @@ export function TimerProvider({ children }: { children: ReactNode }) {
   }, [running, mode, total, work, rest, load])
 
   useEffect(() => {
-    document.title = running ? `${mmss(left)} · Focus Log` : 'Focus Log'
+    document.title = running ? `${mmss(left)} · Streakly` : 'Streakly'
   }, [running, left])
-  useEffect(() => () => { document.title = 'Focus Log' }, [])
+  useEffect(() => () => { document.title = 'Streakly' }, [])
 
   useEffect(() => {
     if (!toast) return

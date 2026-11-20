@@ -3,6 +3,8 @@ import { useNavigate } from '@tanstack/react-router'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../lib/auth'
 import Avatar, { COLORS, useProfile } from '../components/Avatar'
+import ConfirmDialog from '../components/ConfirmDialog'
+import { RULES, STRENGTH, level } from '../lib/password'
 
 function shrink(file: File): Promise<string> {
   return new Promise((ok, no) => {
@@ -26,6 +28,11 @@ export default function Profile() {
   const file = useRef<HTMLInputElement>(null)
   const [f, setF] = useState({ username: p.username, bio: p.bio, goal: String(p.goal), color: p.color, photo: p.photo ?? '' })
   const [pw, setPw] = useState('')
+  const [confirming, setConfirming] = useState<'pw' | 'out' | null>(null)
+  const [busy, setBusy] = useState(false)
+  const [show, setShow] = useState(false)
+  const met = RULES.map((r) => r.test(pw, p.email))
+  const lv = level(met.filter(Boolean).length)
   const [msg, setMsg] = useState({ text: '', ok: false, where: '' })
   const say = (where: string, text: string, ok = false) => setMsg({ text, ok, where })
   useEffect(() => { setF({ username: p.username, bio: p.bio, goal: String(p.goal), color: p.color, photo: p.photo ?? '' }) }, [session?.user.updated_at]) // eslint-disable-line
@@ -43,12 +50,30 @@ export default function Profile() {
     if (!files?.[0]) return
     try { setF({ ...f, photo: await shrink(files[0]) }) } catch (e) { say('p', (e as Error).message) }
   }
-  async function changePw(e: FormEvent) {
+  // Step 1: validate, then ask for confirmation.
+  function askChangePw(e: FormEvent) {
     e.preventDefault()
-    if (pw.length < 8) return say('w', 'Use at least 8 characters.')
+    const bad = RULES.find((r) => !r.test(pw, p.email))
+    if (bad) return say('w', `Password needs: ${bad.label.toLowerCase()}.`)
+    say('w', '')
+    setConfirming('pw')
+  }
+  // Step 2: runs only after the user confirms.
+  async function changePw() {
+    setBusy(true)
     const { error } = await supabase.auth.updateUser({ password: pw })
+    setBusy(false)
+    setConfirming(null)
     say('w', error ? error.message : 'Password updated.', !error)
     if (!error) setPw('')
+  }
+  async function signOut() {
+    setBusy(true)
+    const { error } = await supabase.auth.signOut()
+    setBusy(false)
+    setConfirming(null)
+    if (error) return say('s', error.message)
+    navigate({ to: '/' })
   }
 
   const joined = session?.user.created_at ? new Date(session.user.created_at).toLocaleDateString([], { dateStyle: 'long' }) : ''
@@ -96,20 +121,61 @@ export default function Profile() {
 
         <section className="panel lg:col-span-2">
           <h2 className="text-xl">Change password</h2>
-          <form onSubmit={changePw} className="mt-3 flex flex-wrap items-center gap-2">
-            <label className="min-w-56 flex-1"><span className="sr-only">New password</span>
-              <input type="password" autoComplete="new-password" placeholder="New password (8+ characters)" value={pw} onChange={(e) => setPw(e.target.value)} className="input" />
-            </label>
-            <button className="btn">Update password</button>
+          <form onSubmit={askChangePw} className="mt-3">
+            {/* Lets password managers attach the new password to the right account */}
+            <input type="email" autoComplete="username" value={p.email} readOnly tabIndex={-1} aria-hidden="true" className="sr-only" />
+            <div className="flex flex-wrap items-center gap-1">
+              <label className="min-w-56 flex-1"><span className="sr-only">New password</span>
+                <input type={show ? 'text' : 'password'} autoComplete="new-password" placeholder="New password" value={pw} onChange={(e) => { setPw(e.target.value); if (msg.where === 'w') say('w', '') }} className="input" />
+              </label>
+              <button type="button" className="btn btn-sm" aria-pressed={show} aria-label={show ? 'Hide password' : 'Show password'} title={show ? 'Hide password' : 'Show password'} onClick={() => setShow(!show)}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" />
+                  <circle cx="12" cy="12" r="3" />
+                  {!show && <path d="M3 3l18 18" />}
+                </svg>
+              </button>
+              <button className="btn" disabled={!met.every(Boolean)}>Update password</button>
+            </div>
+            <div className="meter" data-l={lv} aria-hidden="true"><i /><i /><i /><i /></div>
+            <p className="my-1 text-muted">Strength: {STRENGTH[lv]}</p>
+            <ul className="rules">
+              {RULES.map((r, i) => (
+                <li key={r.label} className={met[i] ? 'ok' : ''}>{r.label}<span className="sr-only">{met[i] ? ' (met)' : ' (not met)'}</span></li>
+              ))}
+            </ul>
           </form>
           <p role="alert" className={`mt-2 min-h-6 ${msg.where === 'w' && msg.ok ? 'text-good' : 'text-bad'}`}>{msg.where === 'w' ? msg.text : ''}</p>
         </section>
 
         <section className="panel flex flex-col items-start justify-between gap-3">
           <div><h2 className="text-xl">Session</h2><p className="mt-1 text-muted">Signed in as {p.email}</p></div>
-          <button className="btn btn-danger" onClick={async () => { await supabase.auth.signOut(); navigate({ to: '/' }) }}>Sign out</button>
+          <button type="button" className="btn btn-danger" onClick={() => setConfirming('out')}>Sign out</button>
+          <p role="alert" className="text-bad">{msg.where === 's' ? msg.text : ''}</p>
         </section>
       </div>
+
+      <ConfirmDialog
+        open={confirming === 'pw'}
+        title="Update your password?"
+        confirmLabel="Yes, update"
+        busy={busy}
+        onConfirm={changePw}
+        onCancel={() => setConfirming(null)}
+      >
+        Your password will be changed right away. Use the new one the next time you sign in.
+      </ConfirmDialog>
+      <ConfirmDialog
+        open={confirming === 'out'}
+        title="Sign out?"
+        confirmLabel="Sign out"
+        danger
+        busy={busy}
+        onConfirm={signOut}
+        onCancel={() => setConfirming(null)}
+      >
+        You will need to sign in again to see your timer, habits and weekly stats.
+      </ConfirmDialog>
     </>
   )
 }

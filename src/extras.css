@@ -30,3 +30,15 @@
 .chart .col { flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 6px; font-size: .75rem; color: var(--color-muted); }
 .chart i { width: 100%; min-height: 4px; border-radius: 7px 7px 3px 3px; background: linear-gradient(180deg, #3de8d0, #6d5cff); transform-origin: bottom; animation: growY .7s cubic-bezier(.2,.8,.2,1) both; }
 @keyframes growY { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+
+/* Confirmation dialog */
+dialog.confirm { margin: auto; width: min(92vw, 26rem); padding: 0; border: 1px solid #ffffff30; border-radius: 20px; color: var(--color-text); background: linear-gradient(165deg, #1a1e47, #0d102b); box-shadow: 0 30px 70px -20px #000, inset 0 1px 0 #ffffff25; }
+dialog.confirm::backdrop { background: #03040dcc; backdrop-filter: blur(4px); }
+dialog.confirm .confirm-body { padding: 24px; }
+dialog.confirm .btn { border-radius: 12px; }
+dialog.confirm .btn-danger { background: #d63f55; }
+dialog.confirm .btn-yel { background: #ffc233; border-color: #ffd980; color: #2a1700; }
+html[data-theme="light"] dialog.confirm { background: #fff; color: #14162e; border-color: #14162e26; }
+html[data-theme="light"] dialog.confirm .btn { color: #14162e; background: #ffffffb3; border-color: #14162e26; }
+html[data-theme="light"] dialog.confirm .btn-danger { background: #d63f55; color: #fff; border-color: #d63f55; }
+html[data-theme="light"] dialog.confirm .btn-yel { background: #ffc233; color: #2a1700; }
