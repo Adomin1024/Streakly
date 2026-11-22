@@ -3,25 +3,25 @@ import { useTimer } from '../lib/timer'
 import { useProfile } from './Avatar'
 import Ring from './Ring'
 
-export function GoalRing() {
+export function GoalRing({ size }: { size?: number }) {
   const { rows } = useTimer()
   const { goal } = useProfile()
   const min = Math.round(rows.filter((r) => r.kind === 'focus').reduce((a, r) => a + r.duration_sec, 0) / 60)
   return (
     <>
       <h2 className="text-xl">Daily goal</h2>
-      <div className="mt-4 flex justify-center"><Ring value={min} max={goal} label={`${Math.min(100, Math.round((min / goal) * 100))}%`} sub={`${min} / ${goal} min`} /></div>
+      <div className="mt-4 flex justify-center"><Ring size={size} value={min} max={goal} label={`${Math.min(100, Math.round((min / goal) * 100))}%`} sub={`${min} / ${goal} min`} /></div>
       <p className="mt-3 text-center text-muted">{min >= goal ? 'Goal reached for today.' : `${goal - min} min left to hit your goal.`}</p>
     </>
   )
 }
 
-export function HabitRing() {
+export function HabitRing({ size }: { size?: number }) {
   const s = useStats()
   return (
     <>
       <h2 className="text-xl">Habits today</h2>
-      <div className="mt-4 flex justify-center"><Ring value={s.done} max={s.habits} color="#ffc233" label={`${s.done}/${s.habits}`} sub="done" /></div>
+      <div className="mt-4 flex justify-center"><Ring size={size} value={s.done} max={s.habits} color="#ffc233" label={`${s.done}/${s.habits}`} sub="done" /></div>
       <p className="mt-3 text-center text-muted">{s.habits === 0 ? 'Add a habit to start tracking.' : s.done === s.habits ? 'Every habit checked off.' : `${s.habits - s.done} still to go.`}</p>
     </>
   )
