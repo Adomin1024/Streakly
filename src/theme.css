@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;600;700&display=swap');
+
+/* App-only type: the landing page keeps its own fonts. */
+#main, .top { --font-display: "Bricolage Grotesque", system-ui, sans-serif; font-family: "Figtree", system-ui, sans-serif; }
+#main h1 { font-weight: 700; letter-spacing: -.035em; }
+
+.top .brand { margin-right: 2rem; gap: .6rem; font-size: 1.15rem; }
+.top .brand img { width: 30px; height: 30px; }
+
+.donut { position: relative; display: grid; place-items: center; }
+.donut svg { position: absolute; inset: 0; }
+.donut-t { text-align: center; line-height: 1.15; }
+.donut-t b { display: block; font: 700 1.7rem var(--font-display); }
+.donut-t span { font-size: .8rem; color: var(--color-muted); }
+
+.xp { height: 10px; margin-top: 14px; border-radius: 99px; background: #ffffff1a; overflow: hidden; }
+.xp i { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, #ffc233, #ff6fb1); animation: grow 1.2s cubic-bezier(.22,1,.36,1); }
+.mini { padding: 12px; border-radius: 14px; background: #ffffff0d; border: 1px solid #ffffff1a; font-size: .85rem; color: var(--color-muted); }
+.mini b { display: block; font: 700 1.5rem var(--font-display); color: var(--color-text); }
+.heat { display: grid; grid-template-rows: repeat(7, 1fr); grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px; margin-top: 16px; }
+.heat i, .heat b { aspect-ratio: 1; border-radius: 4px; background: #ffffff12; }
+.heat b { background: none; }
+.heat i[data-l="1"] { background: #3de8d055; } .heat i[data-l="2"] { background: #3de8d099; }
+.heat i[data-l="3"] { background: #3de8d0cc; } .heat i[data-l="4"] { background: #3de8d0; box-shadow: 0 0 8px #3de8d088; }
+
+/* ---------- light mode (app only) ---------- */
+html[data-theme="light"] { --color-night: #f1f2fb; --color-text: #14162e; --color-muted: #555c85; --color-line: #14162e1f; --color-bad: #c42b45; --color-good: #12875a; }
+html[data-theme="light"] .bg { background: radial-gradient(1000px 600px at 10% -10%, #d8cfff, transparent 60%), radial-gradient(800px 500px at 100% 10%, #bdeff7, transparent 60%), #f1f2fb; }
+html[data-theme="light"] .orb { opacity: .3; }
+html[data-theme="light"] .crystal { opacity: .6; }
+html[data-theme="light"] .bg::after { opacity: .5; }
+html[data-theme="light"] #main h1, html[data-theme="light"] #main h2, html[data-theme="light"] #main h3, html[data-theme="light"] .top .brand { color: #14162e; }
+html[data-theme="light"] .top { background: #f4f5fcdd; border-color: #14162e1a; box-shadow: 0 8px 24px -16px #14162e55; }
+html[data-theme="light"] #main .panel { background: linear-gradient(165deg, #ffffffd9, #ffffff99); border-color: #14162e1a; box-shadow: 0 16px 36px -22px #14162e66, inset 0 1px 0 #fff; }
+html[data-theme="light"] #main .btn, html[data-theme="light"] .top .btn { color: #14162e; background: #ffffffb3; border-color: #14162e26; box-shadow: 0 3px 8px -4px #14162e55; }
+html[data-theme="light"] #main .btn-yel, html[data-theme="light"] .top .btn-yel { background: #ffc233; }
+html[data-theme="light"] #main .btn-danger { background: #d63f55; color: #fff; border-color: #d63f55; }
+html[data-theme="light"] #main .input { background: #ffffffcc; color: #14162e; border-color: #14162e2a; box-shadow: inset 0 1px 4px #14162e1a; }
+html[data-theme="light"] #main .input::placeholder { color: #7a80a6; }
+html[data-theme="light"] #main .time { color: #14162e; }
+html[data-theme="light"] .chip { background: #ffffffb3; border-color: #14162e22; color: #14162e; }
+html[data-theme="light"] .mini, html[data-theme="light"] .stat { background: #ffffff80; border-color: #14162e1a; }
+html[data-theme="light"] .xp, html[data-theme="light"] .heat i { background: #14162e14; }
+html[data-theme="light"] .heat b { background: none; }
+html[data-theme="light"] .habit, html[data-theme="light"] .logrow { border-color: #14162e14; }
+html[data-theme="light"] .habit:hover, html[data-theme="light"] .logrow:hover, html[data-theme="light"] tbody tr:hover { background: #14162e0a; }
+html[data-theme="light"] .habit input[type=checkbox] { background: #fff; border-color: #14162e44; }

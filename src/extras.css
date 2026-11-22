@@ -1,0 +1,44 @@
+/* App-only refinements. Scoped to #main and .top so the landing page is untouched. */
+#main h1 { font-size: 1.9rem; font-weight: 700; }
+#main h2 { font-weight: 600; letter-spacing: -.03em; }
+#main .panel { border-radius: 20px; padding: 24px; background: linear-gradient(165deg, #ffffff12, #ffffff05); box-shadow: 0 18px 40px -22px #000c, inset 0 1px 0 #ffffff22; animation-duration: .5s; }
+#main .panel:hover { transform: none; border-color: #ffffff40; box-shadow: 0 22px 44px -22px #000, inset 0 1px 0 #ffffff30; }
+#main .btn, .top .btn { border-radius: 12px; box-shadow: 0 4px 10px -4px #000a, inset 0 1px 0 #ffffff30; }
+#main .btn::after, .top .btn::after { display: none; }
+#main .btn:not(:disabled):hover, .top .btn:not(:disabled):hover { transform: translateY(-1px); }
+#main .btn-yel, .top .btn-yel { background: #ffc233; border-color: #ffd980; color: #2a1700; box-shadow: 0 6px 16px -8px #ffc233aa, inset 0 1px 0 #fff7; }
+#main .btn-danger { background: #d63f55; }
+#main .time { background: none; color: #fff; animation: none; filter: none; letter-spacing: -.04em; }
+#main .input { border-radius: 12px; }
+#main textarea.input { resize: vertical; }
+.top { background: #070817d9; }
+.top .chip { padding-right: 14px; }
+
+.avatar { overflow: hidden; flex: none; font-family: var(--font-display); font-weight: 700; color: #1a1030; animation: none; }
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.avatar.xl { width: 104px; height: 104px; font-size: 2.6rem; display: grid; place-items: center; box-shadow: 0 0 0 4px #ffffff18, 0 16px 30px -12px #000; }
+.swatch { width: 26px; height: 26px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: transform .15s; }
+.swatch:hover { transform: scale(1.15); }
+.swatch[aria-pressed=true] { border-color: #fff; box-shadow: 0 0 0 2px #070817; }
+
+.ring { position: relative; display: grid; place-items: center; }
+.ring svg { position: absolute; inset: 0; }
+.ring-t { text-align: center; line-height: 1.15; }
+.ring-t b { display: block; font: 700 1.6rem var(--font-display); }
+.ring-t span { font-size: .8rem; color: var(--color-muted); }
+.chart { display: flex; align-items: flex-end; gap: 8px; height: 140px; margin-top: 16px; }
+.chart .col { flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 6px; font-size: .75rem; color: var(--color-muted); }
+.chart i { width: 100%; min-height: 4px; border-radius: 7px 7px 3px 3px; background: linear-gradient(180deg, #3de8d0, #6d5cff); transform-origin: bottom; animation: growY .7s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes growY { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+
+/* Confirmation dialog */
+dialog.confirm { margin: auto; width: min(92vw, 26rem); padding: 0; border: 1px solid #ffffff30; border-radius: 20px; color: var(--color-text); background: linear-gradient(165deg, #1a1e47, #0d102b); box-shadow: 0 30px 70px -20px #000, inset 0 1px 0 #ffffff25; }
+dialog.confirm::backdrop { background: #03040dcc; backdrop-filter: blur(4px); }
+dialog.confirm .confirm-body { padding: 24px; }
+dialog.confirm .btn { border-radius: 12px; }
+dialog.confirm .btn-danger { background: #d63f55; }
+dialog.confirm .btn-yel { background: #ffc233; border-color: #ffd980; color: #2a1700; }
+html[data-theme="light"] dialog.confirm { background: #fff; color: #14162e; border-color: #14162e26; }
+html[data-theme="light"] dialog.confirm .btn { color: #14162e; background: #ffffffb3; border-color: #14162e26; }
+html[data-theme="light"] dialog.confirm .btn-danger { background: #d63f55; color: #fff; border-color: #d63f55; }
+html[data-theme="light"] dialog.confirm .btn-yel { background: #ffc233; color: #2a1700; }
