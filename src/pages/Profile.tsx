@@ -28,6 +28,7 @@ export default function Profile() {
   const file = useRef<HTMLInputElement>(null)
   const [f, setF] = useState({ username: p.username, bio: p.bio, goal: String(p.goal), color: p.color, photo: p.photo ?? '' })
   const [pw, setPw] = useState('')
+  const [curPw, setCurPw] = useState('')
   const [confirming, setConfirming] = useState<'pw' | 'out' | null>(null)
   const [busy, setBusy] = useState(false)
   const [show, setShow] = useState(false)
@@ -53,19 +54,27 @@ export default function Profile() {
   // Step 1: validate, then ask for confirmation.
   function askChangePw(e: FormEvent) {
     e.preventDefault()
+    if (!curPw) return say('w', 'Enter your current password.')
     const bad = RULES.find((r) => !r.test(pw, p.email))
     if (bad) return say('w', `Password needs: ${bad.label.toLowerCase()}.`)
+    if (pw === curPw) return say('w', 'New password must be different from your current one.')
     say('w', '')
     setConfirming('pw')
   }
   // Step 2: runs only after the user confirms.
   async function changePw() {
     setBusy(true)
+    const { error: authErr } = await supabase.auth.signInWithPassword({ email: p.email, password: curPw })
+    if (authErr) {
+      setBusy(false)
+      setConfirming(null)
+      return say('w', 'Current password is incorrect.')
+    }
     const { error } = await supabase.auth.updateUser({ password: pw })
     setBusy(false)
     setConfirming(null)
     say('w', error ? error.message : 'Password updated.', !error)
-    if (!error) setPw('')
+    if (!error) { setPw(''); setCurPw('') }
   }
   async function signOut() {
     setBusy(true)
@@ -124,6 +133,10 @@ export default function Profile() {
           <form onSubmit={askChangePw} className="mt-3">
             {/* Lets password managers attach the new password to the right account */}
             <input type="email" autoComplete="username" value={p.email} readOnly tabIndex={-1} aria-hidden="true" className="sr-only" />
+            <label className="mb-2 block">
+              <span className="sr-only">Current password</span>
+              <input type={show ? 'text' : 'password'} autoComplete="current-password" placeholder="Current password" value={curPw} onChange={(e) => { setCurPw(e.target.value); if (msg.where === 'w') say('w', '') }} className="input" />
+            </label>
             <div className="flex flex-wrap items-center gap-1">
               <label className="min-w-56 flex-1"><span className="sr-only">New password</span>
                 <input type={show ? 'text' : 'password'} autoComplete="new-password" placeholder="New password" value={pw} onChange={(e) => { setPw(e.target.value); if (msg.where === 'w') say('w', '') }} className="input" />
@@ -135,7 +148,7 @@ export default function Profile() {
                   {!show && <path d="M3 3l18 18" />}
                 </svg>
               </button>
-              <button className="btn" disabled={!met.every(Boolean)}>Update password</button>
+              <button className="btn" disabled={!curPw || !met.every(Boolean)}>Update password</button>
             </div>
             <div className="meter" data-l={lv} aria-hidden="true"><i /><i /><i /><i /></div>
             <p className="my-1 text-muted">Strength: {STRENGTH[lv]}</p>
