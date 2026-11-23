@@ -64,7 +64,13 @@ export default function Login({ mode }: { mode: 'in' | 'up' }) {
           <label className="mt-3 block font-semibold" htmlFor="pw">Password</label>
           <div className="flex items-center gap-1">
             <input id="pw" type={pwType} autoComplete={up ? 'new-password' : 'current-password'} value={password} onChange={(e) => setPassword(e.target.value)} className="input min-w-0 flex-1" />
-            <button type="button" className="btn btn-sm" onClick={() => setShow(!show)}>{show ? 'Hide' : 'Show'}</button>
+            <button type="button" className="btn btn-sm" aria-pressed={show} aria-label={show ? 'Hide password' : 'Show password'} title={show ? 'Hide password' : 'Show password'} onClick={() => setShow(!show)}>
+             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" />
+              <circle cx="12" cy="12" r="3" />
+              {!show && <path d="M3 3l18 18" />}
+             </svg>
+            </button>
           </div>
 
           {up && (
